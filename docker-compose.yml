@@ -1,0 +1,72 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# CBIT-FrontAiForge Docker Compose 配置
+# 
+# v4.0 新特性:
+# - 全新UI设计（未来感校园助手界面）
+# - Logo + CBIT文字（Pacifico字体）
+# - 深色导航栏 + 模型徽章 "CBIT-Elite v 4.0"
+# - 消息气泡设计（小字体，紫色+白色）
+# - 反馈机制（👍 👎 按钮）
+# - Footer（GitHub徽章 + CBIT开发标识 + 免责声明）
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+services:
+  frontaiforge:
+    build:
+      context: .
+      dockerfile: Dockerfile.host
+    container_name: cbit_frontaiforge_gtiit
+    network_mode: "host"  # 使用宿主机网络模式
+    restart: unless-stopped
+    
+    # 环境变量配置
+    # 可选：如果存在 .env.local 文件，则使用其中的配置
+    # 如果不存在，则使用下面 environment 中的默认值
+    # env_file:
+    #   - .env.local
+    
+    # 默认环境变量（可根据需要修改）
+    environment:
+      - BACKEND_API_URL=${BACKEND_API_URL:-http://127.0.0.1:9300}
+      - VITE_APP_TITLE=${VITE_APP_TITLE:-GTIIT Intelligent Assistant}
+      - VITE_APP_VERSION=${VITE_APP_VERSION:-1.0.0}
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9400/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s  # 给予30秒启动时间
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 使用说明 | Usage Instructions
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 
+# 📦 快速开始（使用默认配置）：
+#    docker-compose up -d
+#    默认后端地址: http://127.0.0.1:9300
+# 
+# 🔧 自定义后端地址：
+#    方式1 - 使用环境变量：
+#    BACKEND_API_URL=http://YOUR_BACKEND_IP:9300 docker-compose up -d
+#
+#    方式2 - 使用配置文件（推荐）：
+#    1. 创建环境配置文件:
+#       cp .env.example .env.local
+#    2. 编辑 .env.local 修改 BACKEND_API_URL
+#    3. 取消注释上面的 env_file 部分
+#    4. 启动服务:
+#       docker-compose up -d
+# 
+# 🌐 生产环境部署：
+#    1. 创建生产配置: cp .env.example .env.production
+#    2. 编辑 .env.production 配置后端地址
+#    3. 使用生产配置启动:
+#       docker-compose --env-file .env.production up -d
+# 
+# 📝 环境变量说明：
+#    - BACKEND_API_URL  : 后端API地址（必需）
+#    - VITE_APP_TITLE   : 应用标题（可选）
+#    - VITE_APP_VERSION : 应用版本（可选）
+# 
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
