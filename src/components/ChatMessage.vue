@@ -256,6 +256,14 @@ const renderedContent = computed(() => {
       gfm: true
     })
     
+    // 🔗 设置链接在新窗口打开
+    const renderer = new marked.Renderer()
+    renderer.link = (href: string, title: string | null | undefined, text: string) => {
+      const titleAttr = title ? ` title="${title}"` : ''
+      return `<a href="${href}"${titleAttr} target="_blank" rel="noopener noreferrer" class="chat-link">${text}</a>`
+    }
+    marked.use({ renderer })
+    
     let content = props.message.content
     
     // 1. 识别并美化百分比数据（添加进度条）
@@ -288,17 +296,12 @@ const renderedContent = computed(() => {
     // 5. 渲染Markdown
     const html = marked(content) as string
     
-    // 6. 后处理：添加进度条可视化
+    // 6. 后处理：百分比数字样式（去掉进度条，保留数字）
     let processedHtml = html.replace(/<span class="percentage-badge" data-value="([\d.]+)">([^<]+)<\/span>/g, 
       (_match, value, text) => {
         const percentage = parseFloat(value)
         const color = percentage >= 80 ? '#10b981' : percentage >= 60 ? '#3b82f6' : '#f59e0b'
-        return `
-          <span class="inline-flex items-center gap-2">
-            <span class="percentage-text font-bold" style="color: ${color}">${text}</span>
-            <span class="progress-bar-mini" style="--percentage: ${percentage}%; --color: ${color}"></span>
-          </span>
-        `
+        return `<span class="percentage-text font-bold" style="color: ${color}">${text}</span>`
       }
     )
     
@@ -658,5 +661,31 @@ function cancelFeedback() {
 
 .dark :deep(.prose tr:hover) {
   background: #1e293b;
+}
+
+/* 🔗 链接样式 - 醒目的蓝色 */
+:deep(.chat-link),
+:deep(.prose a) {
+  color: #2563eb !important;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+:deep(.chat-link):hover,
+:deep(.prose a):hover {
+  color: #1d4ed8 !important;
+  text-decoration-thickness: 2px;
+}
+
+.dark :deep(.chat-link),
+.dark :deep(.prose a) {
+  color: #60a5fa !important;
+}
+
+.dark :deep(.chat-link):hover,
+.dark :deep(.prose a):hover {
+  color: #93c5fd !important;
 }
 </style>

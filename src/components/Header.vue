@@ -11,8 +11,8 @@
           @error="(e) => (e.target as HTMLImageElement).src = '/cbit-logo.png'"
         />
         <div class="flex flex-col">
-          <span class="text-lg font-bold text-white">GTIIT AI Assistant</span>
-          <span class="text-xs text-gray-300">广东以色列理工学院智能助手</span>
+          <span class="text-lg font-bold text-white">GTIIT Admissions AI</span>
+          <span class="text-xs text-gray-300">广东以色列理工学院智能小招</span>
         </div>
       </div>
 

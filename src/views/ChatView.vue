@@ -26,7 +26,7 @@
                   广东以色列理工学院
                 </h1>
                 <p class="text-2xl font-light gradient-text">
-                  GTIIT AI Assistant - 您的智能助手
+                  GTIIT Admissions AI - 广以智能小招为您答疑
                 </p>
               </div>
 
